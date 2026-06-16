@@ -17,10 +17,14 @@
     "confidence": {"enum": ["high", "medium", "low"]},
     "source_name": {"type": "string"},
     "source_id": {"type": "string"},
+    "source_type": {"type": "string"},
+    "evidence_type": {"type": "string"},
     "source_urls": {"type": "array", "items": {"type": "string"}},
     "source_timestamp": {"type": "string"},
     "status": {"type": "string"},
     "review_status": {"type": "string"},
+    "evidence_notes": {"type": "string"},
+    "client_safe_caveat": {"type": "string"},
     "needs_review": {"type": "boolean"},
     "review_reasons": {"type": "array", "items": {"type": "string"}}
   }
