@@ -2,6 +2,10 @@
 
 Prepared for: {{ agency_name }}
 Period: {{ brief_period_label }}
+QA status: {{ qa_status }}
+Client ready: {{ client_ready }}
+
+{{ client_ready_warning }}
 
 ## What changed this week
 
