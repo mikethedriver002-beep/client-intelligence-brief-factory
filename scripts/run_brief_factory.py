@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default="outputs/brief_factory")
     parser.add_argument("--run-mode", choices=["source_audit_only", "draft_brief", "full_delivery_packet"], default="full_delivery_packet")
     parser.add_argument("--enable-network", action="store_true", help="Allow RSS network fetching. Manual intake works without this.")
-    parser.add_argument("--strict-qa", action="store_true", help="Exit non-zero if QA fails.")
+    parser.add_argument("--strict-qa", action="store_true", help="Exit non-zero only if QA status is FAIL.")
     return parser.parse_args()
 
 
@@ -51,6 +51,8 @@ def main() -> int:
             "run_mode": args.run_mode,
             "client_config": args.client_config,
             "source_registry": args.source_registry,
+            "client_ready": False,
+            "client_ready_warning": "Source audit only. No client delivery packet was generated.",
             "source_audit": source_audit,
             "outputs": ["source_audit.md", "source_audit.csv", "source_audit.json"],
         }
@@ -80,7 +82,15 @@ def main() -> int:
             "normalized": len(normalized),
             "ranked": len(ranked),
         },
+        "qa_status": qa_report.get("status"),
         "qa_passed": qa_report.get("passed"),
+        "client_ready": qa_report.get("client_ready"),
+        "client_ready_warning": qa_report.get("warning"),
+        "fail_count": qa_report.get("fail_count"),
+        "review_count": qa_report.get("review_count"),
+        "needs_review_count": qa_report.get("needs_review_count"),
+        "human_review_required": qa_report.get("human_review_required"),
+        "human_review_complete": qa_report.get("human_review_complete"),
         "source_audit": source_audit,
     }
 
@@ -92,8 +102,11 @@ def main() -> int:
         write_json(output_dir / "delivery_manifest.json", manifest)
 
     print(f"Brief Factory run complete: {output_dir}")
-    print(f"QA passed: {qa_report.get('passed')}")
-    if args.strict_qa and not qa_report.get("passed"):
+    print(f"QA status: {qa_report.get('status')}")
+    print(f"Client ready: {qa_report.get('client_ready')}")
+    if qa_report.get("warning"):
+        print(f"Warning: {qa_report.get('warning')}")
+    if args.strict_qa and qa_report.get("status") == "FAIL":
         return 2
     return 0
 
