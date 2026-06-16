@@ -27,7 +27,10 @@ KIT_FILES = [
     "10_business_infrastructure_and_send_rules.md",
     "prospect_target_list_template.csv",
     "first_25_prospects_canada_seed.csv",
+    "contact_enrichment/email_verified_send_batch_001_2026_06_16.csv",
+    "contact_enrichment/send_day_tracker_batch_001_2026_06_16.csv",
     "outreach_batches/top5_canada_agency_outreach_batch_2026_06_16.md",
+    "outreach_batches/email_verified_send_batch_001_2026_06_16.md",
 ]
 
 
@@ -49,13 +52,12 @@ def write_index(output_dir: Path, copied_files: list[str]) -> None:
         "## Start here",
         "",
         "1. Read `10_business_infrastructure_and_send_rules.md` before sending anything.",
-        "2. Read `03_agency_pitch_one_pager.md` to understand the offer.",
-        "3. Open `first_25_prospects_canada_seed.csv` for the researched first prospect list.",
-        "4. Open `outreach_batches/top5_canada_agency_outreach_batch_2026_06_16.md` for send-ready top-5 outreach.",
-        "5. Use `01_cold_outreach_email.md` and `02_linkedin_dm.md` for future outreach batches.",
+        "2. Open `contact_enrichment/email_verified_send_batch_001_2026_06_16.csv` for the verified recipient list.",
+        "3. Open `outreach_batches/email_verified_send_batch_001_2026_06_16.md` for the actual email-ready copy.",
+        "4. Open `contact_enrichment/send_day_tracker_batch_001_2026_06_16.csv` to track sends and follow-ups.",
+        "5. Use `first_25_prospects_canada_seed.csv` as the broader prospect source list.",
         "6. Use `05_onboarding_questionnaire.md` after a prospect shows interest.",
-        "7. Use `prospect_target_list_template.csv` to build the next prospect batch.",
-        "8. Use `09_sales_process_sop.md` to run the first paid pilot process.",
+        "7. Use `09_sales_process_sop.md` to run the first paid pilot process.",
         "",
         "## Files included",
         "",
@@ -113,14 +115,16 @@ def main() -> int:
 
     manifest = {
         "schema": "brief_factory.sales_launch_kit_manifest.v1",
-        "version": "v0.4-prospect-seed-top5-outreach-infra",
+        "version": "v0.4-email-verified-batch-001",
         "generated_at_utc": now_utc(),
         "source_dir": str(source_dir),
         "output_dir": str(output_dir),
         "files": copied,
         "first_sales_goal": "Close one paid pilot: one agency, one client niche, one weekly brief, one month.",
         "prospect_seed_file": "first_25_prospects_canada_seed.csv",
-        "top5_outreach_batch": "outreach_batches/top5_canada_agency_outreach_batch_2026_06_16.md",
+        "email_verified_send_batch": "contact_enrichment/email_verified_send_batch_001_2026_06_16.csv",
+        "send_day_tracker": "contact_enrichment/send_day_tracker_batch_001_2026_06_16.csv",
+        "email_ready_outreach_batch": "outreach_batches/email_verified_send_batch_001_2026_06_16.md",
         "business_infrastructure_file": "10_business_infrastructure_and_send_rules.md",
     }
     (output_dir / "sales_launch_kit_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -134,9 +138,9 @@ def main() -> int:
         "output_dir": str(output_dir),
         "zip_path": str(zip_path),
         "files": len(copied),
-        "prospect_seed_file": "first_25_prospects_canada_seed.csv",
-        "top5_outreach_batch": "outreach_batches/top5_canada_agency_outreach_batch_2026_06_16.md",
-        "business_infrastructure_file": "10_business_infrastructure_and_send_rules.md",
+        "email_verified_send_batch": "contact_enrichment/email_verified_send_batch_001_2026_06_16.csv",
+        "email_ready_outreach_batch": "outreach_batches/email_verified_send_batch_001_2026_06_16.md",
+        "send_day_tracker": "contact_enrichment/send_day_tracker_batch_001_2026_06_16.csv",
     }, indent=2))
     return 0
 
