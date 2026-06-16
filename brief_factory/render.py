@@ -8,6 +8,16 @@ from .utils import ensure_dir, markdown_to_basic_html, now_utc, write_csv, write
 SOURCE_FIELDS = ["rank", "item_id", "title", "source_name", "source_url", "source_timestamp", "confidence", "needs_review"]
 
 
+def _qa_status(qa_report: Dict[str, Any]) -> str:
+    if qa_report.get("status"):
+        return str(qa_report["status"])
+    return "PASS" if qa_report.get("passed") else "FAIL"
+
+
+def _client_ready_label(qa_report: Dict[str, Any]) -> str:
+    return "Yes" if qa_report.get("client_ready") else "No"
+
+
 def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, Any]], qa_report: Dict[str, Any]) -> str:
     top_count = int(client_config.get("quality", {}).get("top_count", 5))
     top_items = items[:top_count]
@@ -15,6 +25,8 @@ def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, A
     client_name = client_config.get("client_name", client_config.get("client_id", "Client"))
     agency_name = client_config.get("agency_name", client_config.get("agency_id", "Agency"))
     period = client_config.get("brief_period_label", "This week")
+    qa_status = _qa_status(qa_report)
+    warning = qa_report.get("warning")
 
     lines = [
         f"# Weekly Intelligence Brief: {client_name}",
@@ -22,8 +34,20 @@ def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, A
         f"Prepared for: {agency_name}",
         f"Period: {period}",
         f"Generated: {now_utc()}",
-        f"QA status: {'PASS' if qa_report.get('passed') else 'NEEDS REVIEW'}",
+        f"QA status: {qa_status}",
+        f"Client ready: {_client_ready_label(qa_report)}",
         "",
+    ]
+
+    if warning:
+        lines += [
+            "## Client-readiness warning",
+            "",
+            warning,
+            "",
+        ]
+
+    lines += [
         "## What changed this week",
         "",
     ]
@@ -55,7 +79,7 @@ def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, A
     lines += ["## Watch list", ""]
     if watch_items:
         for item in watch_items:
-            lines.append(f"- **{item['title']}** — {item.get('summary', '')}")
+            lines.append(f"- **{item['title']}** - {item.get('summary', '')}")
     else:
         lines.append("No secondary watch items this run.")
 
@@ -74,6 +98,12 @@ def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, A
         "See `source_appendix.csv` for source URLs, timestamps, and confidence notes.",
         "",
         "## QA notes",
+        "",
+        f"Status: {qa_status}",
+        f"Client ready: {_client_ready_label(qa_report)}",
+        f"Fail count: {qa_report.get('fail_count')}",
+        f"Review count: {qa_report.get('review_count')}",
+        f"Needs-review item count: {qa_report.get('needs_review_count')}",
         "",
     ]
     if qa_report.get("issues"):
@@ -104,13 +134,20 @@ def render_source_appendix(output_dir: Path, items: List[Dict[str, Any]]) -> Non
 
 
 def render_qa_markdown(qa_report: Dict[str, Any]) -> str:
+    qa_status = _qa_status(qa_report)
     lines = [
         "# QA Report",
         "",
-        f"Status: {'PASS' if qa_report.get('passed') else 'NEEDS REVIEW'}",
+        f"Status: {qa_status}",
+        f"Passed technical QA: {'Yes' if qa_report.get('passed') else 'No'}",
+        f"Client ready: {_client_ready_label(qa_report)}",
+        f"Warning: {qa_report.get('warning') or 'None'}",
         f"Items checked: {qa_report.get('items_checked')}",
         f"Fail count: {qa_report.get('fail_count')}",
         f"Review count: {qa_report.get('review_count')}",
+        f"Needs-review item count: {qa_report.get('needs_review_count')}",
+        f"Human review required: {'Yes' if qa_report.get('human_review_required') else 'No'}",
+        f"Human review complete: {'Yes' if qa_report.get('human_review_complete') else 'No'}",
         "",
         "## Issues",
         "",
@@ -126,13 +163,21 @@ def render_qa_markdown(qa_report: Dict[str, Any]) -> str:
 def render_handoff_email(client_config: Dict[str, Any], items: List[Dict[str, Any]], qa_report: Dict[str, Any]) -> str:
     client_name = client_config.get("client_name", "client")
     agency_name = client_config.get("agency_name", "team")
-    status = "passed QA" if qa_report.get("passed") else "needs review before sending"
+    qa_status = _qa_status(qa_report)
+    client_ready = bool(qa_report.get("client_ready"))
+    status = "client-ready" if client_ready else "not client-ready until human review is complete"
+    warning = qa_report.get("warning") or "No client-readiness warning."
     top_titles = "\n".join(f"- {item['title']}" for item in items[:3]) or "- No top items"
     return f"""Subject: Weekly Intelligence Brief for {client_name}
 
 Hi {agency_name},
 
-Your weekly intelligence brief for {client_name} is ready and {status}.
+Your weekly intelligence brief for {client_name} is ready for review.
+
+QA status: {qa_status}
+Client ready: {'Yes' if client_ready else 'No'}
+Packet status: {status}
+Warning: {warning}
 
 Top items:
 {top_titles}
