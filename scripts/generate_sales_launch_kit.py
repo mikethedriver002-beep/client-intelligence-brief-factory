@@ -25,6 +25,7 @@ KIT_FILES = [
     "08_objection_handling.md",
     "09_sales_process_sop.md",
     "prospect_target_list_template.csv",
+    "first_25_prospects_canada_seed.csv",
 ]
 
 
@@ -46,10 +47,11 @@ def write_index(output_dir: Path, copied_files: list[str]) -> None:
         "## Start here",
         "",
         "1. Read `03_agency_pitch_one_pager.md` to understand the offer.",
-        "2. Use `01_cold_outreach_email.md` and `02_linkedin_dm.md` for outreach.",
-        "3. Use `05_onboarding_questionnaire.md` after a prospect shows interest.",
-        "4. Use `prospect_target_list_template.csv` to track the first 25 prospects.",
-        "5. Use `09_sales_process_sop.md` to run the first paid pilot process.",
+        "2. Open `first_25_prospects_canada_seed.csv` for the researched first prospect list.",
+        "3. Use `01_cold_outreach_email.md` and `02_linkedin_dm.md` for outreach.",
+        "4. Use `05_onboarding_questionnaire.md` after a prospect shows interest.",
+        "5. Use `prospect_target_list_template.csv` to build the next prospect batch.",
+        "6. Use `09_sales_process_sop.md` to run the first paid pilot process.",
         "",
         "## Files included",
         "",
@@ -106,12 +108,13 @@ def main() -> int:
 
     manifest = {
         "schema": "brief_factory.sales_launch_kit_manifest.v1",
-        "version": "v0.4",
+        "version": "v0.4-prospect-seed",
         "generated_at_utc": now_utc(),
         "source_dir": str(source_dir),
         "output_dir": str(output_dir),
         "files": copied,
         "first_sales_goal": "Close one paid pilot: one agency, one client niche, one weekly brief, one month.",
+        "prospect_seed_file": "first_25_prospects_canada_seed.csv",
     }
     (output_dir / "sales_launch_kit_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
@@ -119,7 +122,7 @@ def main() -> int:
     manifest["zip_path"] = str(zip_path)
     (output_dir / "sales_launch_kit_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
-    print(json.dumps({"status": "PASS", "output_dir": str(output_dir), "zip_path": str(zip_path), "files": len(copied)}, indent=2))
+    print(json.dumps({"status": "PASS", "output_dir": str(output_dir), "zip_path": str(zip_path), "files": len(copied), "prospect_seed_file": "first_25_prospects_canada_seed.csv"}, indent=2))
     return 0
 
 
