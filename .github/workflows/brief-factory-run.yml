@@ -32,7 +32,7 @@ on:
         type: choice
         options: ["false", "true"]
       strict_qa:
-        description: "Fail workflow only if QA status is FAIL. PASS_WITH_REVIEW still uploads artifacts."
+        description: "Fail workflow if QA status or output validation status is FAIL. Review packets still upload artifacts."
         required: true
         default: "true"
         type: choice
