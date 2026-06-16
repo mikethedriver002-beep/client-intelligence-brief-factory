@@ -1,0 +1,50 @@
+{
+  "schema": "brief_factory.source_registry.v1",
+  "registry_version": "demo-local-seo-v0.1",
+  "updated_utc": "2026-06-16T00:00:00Z",
+  "operating_policy": {
+    "green_use": "Primary/client-facing source when facts appear directly on the source or are operator verified.",
+    "yellow_use": "Discovery or review-only lead. Requires manual confirmation before client delivery.",
+    "red_use": "Do not scrape, bypass login/paywalls, or use in client deliverables."
+  },
+  "sources": [
+    {
+      "source_id": "manual_client_intake",
+      "name": "Manual client and analyst intake",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "operator",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["client_intake", "analyst_notes", "operator_verified_lead"],
+      "publish_policy": "Client-facing only after human review and source URL check.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "google_business_profile_manual",
+      "name": "Google Business Profile review/manual observation",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "client_approved",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["review_delta", "local_visibility_observation"],
+      "publish_policy": "Manual observation only. Do not claim exact rankings without evidence.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "industry_rss_example",
+      "name": "Example public industry RSS source",
+      "source_type": "rss",
+      "enabled": false,
+      "tier": "discovery",
+      "trust_band": "yellow",
+      "urls": ["https://example.com/feed.xml"],
+      "domains": ["example.com"],
+      "allowed_use": ["industry_update", "discovery"],
+      "publish_policy": "Discovery only until replaced by a real public source and reviewed.",
+      "requires_login": false,
+      "resale_restricted": false
+    }
+  ]
+}

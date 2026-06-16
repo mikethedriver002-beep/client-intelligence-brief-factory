@@ -1,0 +1,4 @@
+rank,item_id,title,source_name,source_url,source_timestamp,confidence,needs_review
+1,demo-001,Competitor A adds emergency roof repair page,Competitor A website,https://example.com/competitor-a-emergency-roof-repair,2026-06-15,high,Yes
+2,demo-003,Local home show opens sponsor applications,Local event page,https://example.com/local-home-show-sponsor-applications,2026-06-14,high,Yes
+3,demo-002,Review velocity dips for Demo Local Roofing,Manual analyst check,https://example.com/review-check-notes,2026-06-15,medium,Yes

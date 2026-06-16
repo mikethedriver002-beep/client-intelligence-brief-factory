@@ -1,0 +1,4 @@
+source_id,name,source_type,tier,trust_band,enabled,allowed_use,publish_policy,status,issues,urls_count,domains_count
+manual_client_intake,Manual client and analyst intake,manual,operator,green,Yes,client_intake; analyst_notes; operator_verified_lead,Client-facing only after human review and source URL check.,PASS,,0,0
+google_business_profile_manual,Google Business Profile review/manual observation,manual,client_approved,green,Yes,review_delta; local_visibility_observation,Manual observation only. Do not claim exact rankings without evidence.,PASS,,0,0
+industry_rss_example,Example public industry RSS source,rss,discovery,yellow,No,industry_update; discovery,Discovery only until replaced by a real public source and reviewed.,PASS,,1,1

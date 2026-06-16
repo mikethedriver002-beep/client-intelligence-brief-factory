@@ -1,0 +1,31 @@
+{
+  "schema": "brief_factory.delivery_manifest.v1",
+  "run_id": "2026-06-16T134736Z-demo-local-roofing",
+  "generated_at_utc": "2026-06-16T13:47:36+00:00",
+  "run_mode": "full_delivery_packet",
+  "client_config": "config/clients/demo_local_seo_client.json",
+  "source_registry": "config/source_registries/demo_local_seo_sources.json",
+  "manual_csv": "data/inbox/demo_manual_items.csv",
+  "network_enabled": false,
+  "item_counts": {
+    "raw": 3,
+    "normalized": 3,
+    "ranked": 3
+  },
+  "qa_passed": true,
+  "source_audit": {
+    "schema": "brief_factory.source_audit.v1",
+    "generated_at_utc": "2026-06-16T13:47:36+00:00",
+    "registry_version": "demo-local-seo-v0.1",
+    "counts": {
+      "sources": 3,
+      "green": 2,
+      "yellow": 1,
+      "red": 0,
+      "pass": 3,
+      "review": 0,
+      "fail": 0
+    }
+  },
+  "delivery_zip": "outputs/brief_factory/demo-agency/demo-local-roofing/2026-06-16T134736Z-demo-local-roofing/delivery_packet.zip"
+}

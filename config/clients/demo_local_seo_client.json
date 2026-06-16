@@ -1,0 +1,32 @@
+{
+  "schema": "brief_factory.client_config.v1",
+  "agency_id": "demo_agency",
+  "agency_name": "Demo Growth Agency",
+  "client_id": "demo_local_roofing",
+  "client_name": "Demo Local Roofing Co.",
+  "vertical": "local_seo_and_reputation",
+  "brief_period_label": "Sample week",
+  "timezone": "America/Toronto",
+  "watch_keywords": [
+    "roofing",
+    "contractor",
+    "reviews",
+    "local SEO",
+    "Google Business Profile",
+    "competitor"
+  ],
+  "competitors": [
+    "Competitor A Roofing",
+    "Competitor B Exteriors",
+    "Competitor C Home Services"
+  ],
+  "quality": {
+    "minimum_items": 3,
+    "top_count": 5
+  },
+  "delivery": {
+    "cadence": "weekly",
+    "format": ["markdown", "html", "csv", "zip"],
+    "human_review_required": true
+  }
+}

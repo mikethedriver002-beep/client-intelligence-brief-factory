@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Brief Factory Source Registry",
+  "type": "object",
+  "required": ["registry_version", "sources"],
+  "properties": {
+    "schema": {"type": "string"},
+    "registry_version": {"type": "string"},
+    "operating_policy": {"type": "object"},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "name", "source_type", "enabled", "tier", "trust_band", "allowed_use", "publish_policy"],
+        "properties": {
+          "source_id": {"type": "string"},
+          "name": {"type": "string"},
+          "source_type": {"enum": ["manual", "rss", "html", "official_site", "public_database"]},
+          "enabled": {"type": "boolean"},
+          "tier": {"type": "string"},
+          "trust_band": {"type": "string"},
+          "urls": {"type": "array", "items": {"type": "string"}},
+          "domains": {"type": "array", "items": {"type": "string"}},
+          "allowed_use": {"type": "array", "items": {"type": "string"}},
+          "publish_policy": {"type": "string"},
+          "requires_login": {"type": "boolean"},
+          "resale_restricted": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

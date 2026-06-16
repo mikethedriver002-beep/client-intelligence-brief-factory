@@ -1,0 +1,14 @@
+{
+  "schema": "brief_factory.source_audit.v1",
+  "generated_at_utc": "2026-06-16T13:47:36+00:00",
+  "registry_version": "demo-local-seo-v0.1",
+  "counts": {
+    "sources": 3,
+    "green": 2,
+    "yellow": 1,
+    "red": 0,
+    "pass": 3,
+    "review": 0,
+    "fail": 0
+  }
+}

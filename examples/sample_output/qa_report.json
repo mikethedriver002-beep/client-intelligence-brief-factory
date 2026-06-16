@@ -1,0 +1,9 @@
+{
+  "schema": "brief_factory.qa_report.v1",
+  "passed": true,
+  "fail_count": 0,
+  "review_count": 0,
+  "issues": [],
+  "minimum_items": 3,
+  "items_checked": 3
+}

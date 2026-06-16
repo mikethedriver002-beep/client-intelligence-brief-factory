@@ -1,0 +1,99 @@
+{
+  "items": [
+    {
+      "schema": "brief_factory.brief_item.v1",
+      "item_id": "demo-001",
+      "client_id": "demo_local_roofing",
+      "agency_id": "demo_agency",
+      "generated_at_utc": "2026-06-16T13:47:36+00:00",
+      "title": "Competitor A adds emergency roof repair page",
+      "summary": "Competitor A published a new service page around emergency roof repair and same-day response.",
+      "why_it_matters": "This may signal a push into urgent-intent search terms that convert well for local contractors.",
+      "recommended_action": "Review the client's emergency repair page and consider a stronger FAQ or service-area section.",
+      "category": "competitor_move",
+      "urgency": "high",
+      "confidence": "high",
+      "source_name": "Competitor A website",
+      "source_id": "",
+      "source_urls": [
+        "https://example.com/competitor-a-emergency-roof-repair"
+      ],
+      "source_timestamp": "2026-06-15",
+      "tags": [
+        "roofing",
+        "competitor",
+        "local SEO"
+      ],
+      "notes": "Sample data only",
+      "needs_review": true,
+      "review_reasons": [
+        "status requires review"
+      ],
+      "raw_source": "manual_csv",
+      "score": 94
+    },
+    {
+      "schema": "brief_factory.brief_item.v1",
+      "item_id": "demo-003",
+      "client_id": "demo_local_roofing",
+      "agency_id": "demo_agency",
+      "generated_at_utc": "2026-06-16T13:47:36+00:00",
+      "title": "Local home show opens sponsor applications",
+      "summary": "A local home and garden event appears to be accepting sponsor/vendor applications for the next event cycle.",
+      "why_it_matters": "This could be a lead-gen and brand visibility opportunity if the audience overlaps with homeowners.",
+      "recommended_action": "Decide whether the client should request vendor pricing or sponsor details this week.",
+      "category": "opportunity",
+      "urgency": "medium",
+      "confidence": "high",
+      "source_name": "Local event page",
+      "source_id": "",
+      "source_urls": [
+        "https://example.com/local-home-show-sponsor-applications"
+      ],
+      "source_timestamp": "2026-06-14",
+      "tags": [
+        "event",
+        "opportunity",
+        "roofing"
+      ],
+      "notes": "Sample data only",
+      "needs_review": true,
+      "review_reasons": [
+        "status requires review"
+      ],
+      "raw_source": "manual_csv",
+      "score": 76
+    },
+    {
+      "schema": "brief_factory.brief_item.v1",
+      "item_id": "demo-002",
+      "client_id": "demo_local_roofing",
+      "agency_id": "demo_agency",
+      "generated_at_utc": "2026-06-16T13:47:36+00:00",
+      "title": "Review velocity dips for Demo Local Roofing",
+      "summary": "Manual review check shows fewer new Google reviews this week compared with the prior two-week pace.",
+      "why_it_matters": "Review velocity is a visible trust signal for local searchers and can affect sales confidence.",
+      "recommended_action": "Ask the agency/client whether a post-job review request push is already running.",
+      "category": "risk",
+      "urgency": "medium",
+      "confidence": "medium",
+      "source_name": "Manual analyst check",
+      "source_id": "",
+      "source_urls": [
+        "https://example.com/review-check-notes"
+      ],
+      "source_timestamp": "2026-06-15",
+      "tags": [
+        "reviews",
+        "reputation"
+      ],
+      "notes": "Sample data only",
+      "needs_review": true,
+      "review_reasons": [
+        "status requires review"
+      ],
+      "raw_source": "manual_csv",
+      "score": 67
+    }
+  ]
+}
