@@ -80,6 +80,12 @@ def run_quality_gate(items: List[Dict[str, Any]], client_config: Dict[str, Any],
             issues.append({"severity": "fail", "item_id": item_id, "issue": "top item missing source URL"})
         if not item.get("source_timestamp"):
             issues.append({"severity": "review", "item_id": item_id, "issue": "top item missing source timestamp"})
+        if not item.get("source_id"):
+            issues.append({"severity": "review", "item_id": item_id, "issue": "top item missing source_id"})
+        if not item.get("source_type"):
+            issues.append({"severity": "review", "item_id": item_id, "issue": "top item missing source_type"})
+        if not item.get("evidence_type"):
+            issues.append({"severity": "review", "item_id": item_id, "issue": "top item missing evidence_type"})
         if not item.get("summary"):
             issues.append({"severity": "fail", "item_id": item_id, "issue": "top item missing summary"})
         if not item.get("why_it_matters"):
