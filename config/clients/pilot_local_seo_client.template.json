@@ -1,0 +1,45 @@
+{
+  "schema": "brief_factory.client_config.v1",
+  "agency_id": "replace_with_agency_slug",
+  "agency_name": "Replace With Agency Name",
+  "client_id": "replace_with_client_slug",
+  "client_name": "Replace With Client Name",
+  "vertical": "local_seo_and_reputation",
+  "brief_period_label": "Week of YYYY-MM-DD",
+  "timezone": "America/Toronto",
+  "watch_keywords": [
+    "primary service keyword",
+    "secondary service keyword",
+    "reviews",
+    "local SEO",
+    "competitor",
+    "sponsorship",
+    "event opportunity"
+  ],
+  "competitors": [
+    "Competitor 1",
+    "Competitor 2",
+    "Competitor 3"
+  ],
+  "service_areas": [
+    "City or neighborhood 1",
+    "City or neighborhood 2"
+  ],
+  "quality": {
+    "minimum_items": 3,
+    "top_count": 5
+  },
+  "delivery": {
+    "cadence": "weekly",
+    "format": ["markdown", "html", "csv", "zip"],
+    "human_review_required": true,
+    "human_review_complete": false,
+    "review_status": "pending"
+  },
+  "approval": {
+    "reviewer": "operator",
+    "human_review_required": true,
+    "human_review_complete": false,
+    "review_status": "pending"
+  }
+}
