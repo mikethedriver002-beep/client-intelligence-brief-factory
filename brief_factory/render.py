@@ -12,6 +12,8 @@ SOURCE_FIELDS = [
     "category",
     "urgency",
     "source_id",
+    "source_type",
+    "evidence_type",
     "source_name",
     "source_url",
     "source_timestamp",
@@ -20,6 +22,11 @@ SOURCE_FIELDS = [
     "evidence_notes",
     "client_safe_caveat",
 ]
+
+PROFILE_EVIDENCE_TYPES = {"manual_profile_observation", "competitor_manual_observation"}
+MARKET_EVIDENCE_TYPES = {"market_trend_article"}
+EVENT_EVIDENCE_TYPES = {"event_watch"}
+RSS_EVIDENCE_TYPES = {"rss_discovery"}
 
 
 def _qa_status(qa_report: Dict[str, Any]) -> str:
@@ -36,11 +43,19 @@ def _first_source_url(item: Dict[str, Any]) -> str:
 
 
 def _is_manual_observation(item: Dict[str, Any]) -> bool:
-    text = " ".join(str(item.get(key, "")) for key in ["source_name", "source_id", "raw_source", "notes"]).lower()
-    return "manual" in text or "observation" in text
+    evidence_type = str(item.get("evidence_type") or "").lower()
+    if evidence_type in PROFILE_EVIDENCE_TYPES:
+        return True
+    if evidence_type:
+        return False
+    text = " ".join(str(item.get(key, "")) for key in ["source_name", "source_id"]).lower()
+    return "profile" in text or "business profile" in text or "google" in text
 
 
 def _evidence_note(item: Dict[str, Any]) -> str:
+    override = str(item.get("evidence_notes") or "").strip()
+    if override:
+        return override
     source_name = item.get("source_name") or "Source"
     source_date = item.get("source_timestamp") or "date not supplied"
     notes = item.get("notes") or "Source link included in source appendix."
@@ -48,10 +63,21 @@ def _evidence_note(item: Dict[str, Any]) -> str:
 
 
 def _client_safe_caveat(item: Dict[str, Any]) -> str:
+    override = str(item.get("client_safe_caveat") or "").strip()
+    if override:
+        return override
     if item.get("needs_review"):
         return "Do not send this item to a client until the listed review reasons are resolved."
-    if _is_manual_observation(item):
-        return "Manual observation. Recheck the source before quoting precise profile details externally."
+
+    evidence_type = str(item.get("evidence_type") or "").lower()
+    if evidence_type in PROFILE_EVIDENCE_TYPES or _is_manual_observation(item):
+        return "Manual profile observation. Recheck the live profile before quoting exact ratings, review counts, hours, or service claims externally."
+    if evidence_type in MARKET_EVIDENCE_TYPES:
+        return "Market trend source. Use as directional context and pair with client-specific data before making a final recommendation."
+    if evidence_type in EVENT_EVIDENCE_TYPES:
+        return "Event watch item. Verify official vendor, sponsorship, deadline, and cost details before pitching action to the client."
+    if evidence_type in RSS_EVIDENCE_TYPES:
+        return "RSS discovery item. Confirm against the linked source before including in a client-ready recommendation."
     if item.get("confidence") == "medium":
         return "Use as directional context and pair with client-specific evidence before final recommendations."
     if item.get("confidence") == "low":
@@ -64,16 +90,24 @@ def _source_quality_lines(manifest: Dict[str, Any] | None, qa_report: Dict[str, 
     source_audit = manifest.get("source_audit", {}) if isinstance(manifest.get("source_audit", {}), dict) else {}
     counts = source_audit.get("counts", {}) if isinstance(source_audit.get("counts", {}), dict) else {}
     manual_count = sum(1 for item in items if _is_manual_observation(item))
+    market_count = sum(1 for item in items if str(item.get("evidence_type") or "").lower() in MARKET_EVIDENCE_TYPES)
+    event_count = sum(1 for item in items if str(item.get("evidence_type") or "").lower() in EVENT_EVIDENCE_TYPES)
+    missing_source_id = sum(1 for item in items if not item.get("source_id"))
     lines = [
         "## Source Quality",
         "",
         f"- Source audit: {counts.get('pass', 0)} passed, {counts.get('review', 0)} need review, {counts.get('fail', 0)} failed.",
         f"- Trust mix: {counts.get('green', 0)} green, {counts.get('yellow', 0)} yellow, {counts.get('red', 0)} red.",
         f"- Item QA: {qa_report.get('fail_count', 0)} fail, {qa_report.get('review_count', 0)} review, {qa_report.get('needs_review_count', 0)} needs-review items.",
-        f"- Manual observations: {manual_count}.",
+        f"- Evidence mix: {manual_count} manual profile observations, {market_count} market trend sources, {event_count} event/watch items.",
+        f"- Missing source_id values: {missing_source_id}.",
     ]
     if manual_count:
-        lines.append("- Manual observation caveat: recheck live profile details before quoting precise values externally.")
+        lines.append("- Manual profile caveat: recheck live profile details before quoting exact ratings, review counts, hours, or service claims externally.")
+    if market_count:
+        lines.append("- Market trend caveat: treat trend articles as directional context, not client-specific proof.")
+    if event_count:
+        lines.append("- Event watch caveat: verify official event/vendor details before recommending a sponsorship or booth action.")
     lines.append("- Delivery posture: client-ready for internal strategy use." if qa_report.get("client_ready") else "- Delivery posture: not client-ready until QA and review issues are resolved.")
     return lines + [""]
 
@@ -122,6 +156,8 @@ def _item_block(index: int, item: Dict[str, Any]) -> List[str]:
         f"**Evidence note:** {_evidence_note(item)}",
         "",
         f"**Client-safe caveat:** {_client_safe_caveat(item)}",
+        "",
+        f"**Evidence type:** {item.get('evidence_type') or 'unknown'}",
         "",
         f"**Category / urgency / confidence:** {item.get('category')} / {item.get('urgency')} / {item.get('confidence')}.{review_note}",
         "",
@@ -191,7 +227,7 @@ def render_brief_markdown(client_config: Dict[str, Any], items: List[Dict[str, A
         "",
         "## Source appendix",
         "",
-        "See `source_appendix.csv` for source URLs, timestamps, confidence notes, evidence notes, and client-safe caveats.",
+        "See `source_appendix.csv` for source URLs, timestamps, confidence notes, evidence types, evidence notes, and client-safe caveats.",
         "",
         "## QA notes",
         "",
@@ -223,7 +259,7 @@ def render_outreach_ready_sample(client_config: Dict[str, Any], items: List[Dict
         "",
         "## What this sample proves",
         "",
-        "This sample shows how a weekly agency brief can turn monitoring into client-ready actions. Each item includes a plain-English signal, why it matters, recommended action, evidence note, and caveat.",
+        "This sample shows how a weekly agency brief can turn monitoring into client-ready actions. Each item includes a plain-English signal, why it matters, recommended action, evidence note, evidence type, and caveat.",
         "",
         "## Three signals an agency could act on this week",
         "",
@@ -239,6 +275,8 @@ def render_outreach_ready_sample(client_config: Dict[str, Any], items: List[Dict
             f"**Agency action:** {item.get('recommended_action', '')}",
             "",
             f"**Evidence note:** {_evidence_note(item)}",
+            "",
+            f"**Evidence type:** {item.get('evidence_type') or 'unknown'}",
             "",
             f"**Client-safe caveat:** {_client_safe_caveat(item)}",
             "",
@@ -289,7 +327,7 @@ def render_agency_sales_sample(client_config: Dict[str, Any], items: List[Dict[s
         "- Executive memo with the week's highest-priority client signals",
         "- Ranked developments with why-it-matters notes",
         "- Recommended client actions and talking points",
-        "- Evidence notes, source links, timestamps, and source appendix",
+        "- Evidence notes, source links, timestamps, evidence types, and source appendix",
         "- QA report and client-readiness status",
         "- Delivery ZIP that can be reviewed, edited, and forwarded",
         "",
@@ -327,6 +365,8 @@ def render_source_appendix(output_dir: Path, items: List[Dict[str, Any]]) -> Non
                 "category": item.get("category", ""),
                 "urgency": item.get("urgency", ""),
                 "source_id": item.get("source_id", ""),
+                "source_type": item.get("source_type", ""),
+                "evidence_type": item.get("evidence_type", ""),
                 "source_name": item.get("source_name", ""),
                 "source_url": url,
                 "source_timestamp": item.get("source_timestamp", ""),
