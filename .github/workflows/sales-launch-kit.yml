@@ -1,0 +1,44 @@
+name: Sales Launch Kit
+run-name: Sales Launch Kit • run ${{ github.run_number }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      output_root:
+        description: "Output root for generated sales kit"
+        required: true
+        default: "outputs/sales_launch_kit"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  sales-launch-kit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Generate sales launch kit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/generate_sales_launch_kit.py --output-root "${{ github.event.inputs.output_root }}"
+
+      - name: Upload sales launch kit artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: brief-factory-v0-4-sales-launch-kit-${{ github.run_number }}
+          path: |
+            outputs/sales_launch_kit/**
