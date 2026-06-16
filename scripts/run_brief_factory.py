@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
 
 from brief_factory.manual_ingest import ingest_manual_csv
 from brief_factory.normalizer import normalize_items
+from brief_factory.output_validation import validate_delivery_outputs
 from brief_factory.packager import build_zip
 from brief_factory.quality_gate import run_quality_gate
 from brief_factory.ranker import rank_items
@@ -29,7 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", default="outputs/brief_factory")
     parser.add_argument("--run-mode", choices=["source_audit_only", "draft_brief", "full_delivery_packet"], default="full_delivery_packet")
     parser.add_argument("--enable-network", action="store_true", help="Allow RSS network fetching. Manual intake works without this.")
-    parser.add_argument("--strict-qa", action="store_true", help="Exit non-zero only if QA status is FAIL.")
+    parser.add_argument("--strict-qa", action="store_true", help="Exit non-zero if QA status or output validation status is FAIL.")
     return parser.parse_args()
 
 
@@ -95,6 +96,9 @@ def main() -> int:
     }
 
     write_delivery_files(output_dir, client_config, ranked, qa_report, manifest)
+    output_validation = validate_delivery_outputs(output_dir, ranked)
+    manifest["output_validation"] = output_validation
+    write_json(output_dir / "delivery_manifest.json", manifest)
 
     if args.run_mode == "full_delivery_packet":
         zip_path = build_zip(output_dir)
@@ -104,10 +108,13 @@ def main() -> int:
     print(f"Brief Factory run complete: {output_dir}")
     print(f"QA status: {qa_report.get('status')}")
     print(f"Client ready: {qa_report.get('client_ready')}")
+    print(f"Output validation: {output_validation.get('status')}")
     if qa_report.get("warning"):
         print(f"Warning: {qa_report.get('warning')}")
     if args.strict_qa and qa_report.get("status") == "FAIL":
         return 2
+    if args.strict_qa and output_validation.get("status") == "FAIL":
+        return 3
     return 0
 
 
