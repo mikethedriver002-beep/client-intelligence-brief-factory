@@ -10,9 +10,36 @@
     "client_id": {"type": "string"},
     "client_name": {"type": "string"},
     "vertical": {"type": "string"},
+    "brief_period_label": {"type": "string"},
+    "timezone": {"type": "string"},
     "watch_keywords": {"type": "array", "items": {"type": "string"}},
     "competitors": {"type": "array", "items": {"type": "string"}},
-    "quality": {"type": "object"},
-    "delivery": {"type": "object"}
+    "service_areas": {"type": "array", "items": {"type": "string"}},
+    "quality": {
+      "type": "object",
+      "properties": {
+        "minimum_items": {"type": "integer", "minimum": 1},
+        "top_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "cadence": {"type": "string"},
+        "format": {"type": "array", "items": {"type": "string"}},
+        "human_review_required": {"type": "boolean"},
+        "human_review_complete": {"type": "boolean"},
+        "review_status": {"type": "string"}
+      }
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "human_review_required": {"type": "boolean"},
+        "human_review_complete": {"type": "boolean"},
+        "review_status": {"type": "string"},
+        "reviewer": {"type": "string"}
+      }
+    }
   }
 }
