@@ -1,0 +1,102 @@
+{
+  "schema": "brief_factory.source_registry.v1",
+  "registry_version": "pilot-toronto-roofing-v0.1",
+  "updated_utc": "2026-06-16T00:00:00Z",
+  "operating_policy": {
+    "green_use": "Primary/client-facing source when facts appear directly on the source or are operator verified.",
+    "yellow_use": "Discovery or review-only lead. Requires manual confirmation before client delivery.",
+    "red_use": "Do not use red sources in client deliverables."
+  },
+  "sources": [
+    {
+      "source_id": "manual_client_intake",
+      "name": "Manual client and analyst intake",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "operator",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["client_intake", "analyst_notes", "operator_verified_lead"],
+      "publish_policy": "Client-facing only after human review and source URL check.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "google_maps_universal_roofs_manual",
+      "name": "Universal Roofs profile manual observation",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "operator",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["competitor_reputation", "local_visibility_observation", "service_positioning"],
+      "publish_policy": "Manual observation only. Use for directional reputation and positioning notes with source link.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "google_maps_alba_tech_manual",
+      "name": "Alba Tech Roofing profile manual observation",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "operator",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["competitor_reputation", "availability_positioning", "local_visibility_observation"],
+      "publish_policy": "Manual observation only. Use for directional reputation and availability notes with source link.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "google_maps_available_roofing_manual",
+      "name": "Available Roofing profile manual observation",
+      "source_type": "manual",
+      "enabled": true,
+      "tier": "operator",
+      "trust_band": "green_when_operator_verified",
+      "allowed_use": ["competitor_reputation", "service_area_positioning", "local_visibility_observation"],
+      "publish_policy": "Manual observation only. Use for directional reputation and service-area positioning notes with source link.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "home_improvement_2026_renovation_trend",
+      "name": "2026 home improvement demand trend article",
+      "source_type": "html",
+      "enabled": true,
+      "tier": "primary",
+      "trust_band": "green",
+      "urls": ["https://nypost.com/2026/02/05/real-estate/home-upgrades-are-being-set-as-new-years-resolutions/"],
+      "domains": ["nypost.com"],
+      "allowed_use": ["market_trend", "content_angle", "demand_signal"],
+      "publish_policy": "Use as a market-trend source with attribution and concise summary only.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "home_features_cost_2026_trend",
+      "name": "2026 home features cost trend article",
+      "source_type": "html",
+      "enabled": true,
+      "tier": "primary",
+      "trust_band": "green",
+      "urls": ["https://www.thespruce.com/home-features-getting-more-expensive-in-2026-11890483"],
+      "domains": ["thespruce.com"],
+      "allowed_use": ["market_trend", "content_angle", "pricing_concern"],
+      "publish_policy": "Use as a market-trend source with attribution and concise summary only.",
+      "requires_login": false,
+      "resale_restricted": false
+    },
+    {
+      "source_id": "cne_2026_public_event",
+      "name": "Canadian National Exhibition 2026 public event reference",
+      "source_type": "html",
+      "enabled": true,
+      "tier": "primary",
+      "trust_band": "green",
+      "urls": ["https://en.wikipedia.org/wiki/Canadian_National_Exhibition"],
+      "domains": ["wikipedia.org"],
+      "allowed_use": ["local_opportunity", "event", "brand_visibility"],
+      "publish_policy": "Use only for high-level public event timing and scale; verify vendor details before pitching.",
+      "requires_login": false,
+      "resale_restricted": false
+    }
+  ]
+}
