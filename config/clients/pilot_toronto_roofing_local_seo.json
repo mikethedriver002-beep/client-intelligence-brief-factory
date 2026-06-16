@@ -1,0 +1,50 @@
+{
+  "schema": "brief_factory.client_config.v1",
+  "agency_id": "sample_local_growth_agency",
+  "agency_name": "Sample Local Growth Agency",
+  "client_id": "toronto_roofing_sample_client",
+  "client_name": "Toronto Roofing Sample Client",
+  "vertical": "local_seo_and_reputation",
+  "brief_period_label": "Pilot sample - checked 2026-06-16",
+  "timezone": "America/Toronto",
+  "watch_keywords": [
+    "Toronto roofing",
+    "emergency roof repair Toronto",
+    "flat roof repair Toronto",
+    "roofing reviews",
+    "Google Business Profile",
+    "home improvement events",
+    "roofing cost concerns"
+  ],
+  "competitors": [
+    "Universal Roofs",
+    "Alba Tech Roofing Toronto",
+    "Available Roofing",
+    "Flat Roofs Toronto"
+  ],
+  "service_areas": [
+    "Toronto",
+    "Etobicoke",
+    "North York",
+    "Scarborough",
+    "Oakville",
+    "Mississauga"
+  ],
+  "quality": {
+    "minimum_items": 3,
+    "top_count": 5
+  },
+  "delivery": {
+    "cadence": "weekly",
+    "format": ["markdown", "html", "csv", "zip"],
+    "human_review_required": true,
+    "human_review_complete": true,
+    "review_status": "approved"
+  },
+  "approval": {
+    "reviewer": "operator",
+    "human_review_required": true,
+    "human_review_complete": true,
+    "review_status": "approved"
+  }
+}
