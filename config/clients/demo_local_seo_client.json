@@ -27,6 +27,8 @@
   "delivery": {
     "cadence": "weekly",
     "format": ["markdown", "html", "csv", "zip"],
-    "human_review_required": true
+    "human_review_required": true,
+    "human_review_complete": false,
+    "review_status": "pending"
   }
 }
