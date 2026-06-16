@@ -1,0 +1,70 @@
+name: Sales Ops Control Center
+run-name: Sales Ops Control Center • run ${{ github.run_number }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tracker_csv:
+        description: "Sales tracker CSV"
+        required: true
+        default: "sales_launch_kit/contact_enrichment/send_day_tracker_batch_001_2026_06_16.csv"
+        type: string
+      output_root:
+        description: "Output root for generated sales ops packet"
+        required: true
+        default: "outputs/sales_ops"
+        type: string
+      as_of_date:
+        description: "YYYY-MM-DD date for due-action calculation. Leave blank for runner date."
+        required: false
+        default: ""
+        type: string
+      sender:
+        description: "Sender email for generated follow-up scripts"
+        required: true
+        default: "michael@brieffactory.com"
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  sales-ops-control-center:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Run sales ops control center
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${{ github.event.inputs.as_of_date }}" ]; then
+            python scripts/run_sales_ops_control_center.py \
+              --tracker-csv "${{ github.event.inputs.tracker_csv }}" \
+              --output-root "${{ github.event.inputs.output_root }}" \
+              --as-of-date "${{ github.event.inputs.as_of_date }}" \
+              --sender "${{ github.event.inputs.sender }}"
+          else
+            python scripts/run_sales_ops_control_center.py \
+              --tracker-csv "${{ github.event.inputs.tracker_csv }}" \
+              --output-root "${{ github.event.inputs.output_root }}" \
+              --sender "${{ github.event.inputs.sender }}"
+          fi
+
+      - name: Upload sales ops artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: brief-factory-v0-5-sales-ops-${{ github.run_number }}
+          path: |
+            outputs/sales_ops/**
