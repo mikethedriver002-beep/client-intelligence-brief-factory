@@ -1,0 +1,88 @@
+name: Brief Factory Run
+run-name: Brief Factory • ${{ github.event.inputs.run_mode || 'full_delivery_packet' }} • run ${{ github.run_number }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_mode:
+        description: "What should run?"
+        required: true
+        default: "full_delivery_packet"
+        type: choice
+        options: [source_audit_only, draft_brief, full_delivery_packet]
+      client_config:
+        description: "Client config path"
+        required: true
+        default: "config/clients/demo_local_seo_client.json"
+        type: string
+      source_registry:
+        description: "Source registry path"
+        required: true
+        default: "config/source_registries/demo_local_seo_sources.json"
+        type: string
+      manual_csv:
+        description: "Manual inbox CSV path"
+        required: true
+        default: "data/inbox/demo_manual_items.csv"
+        type: string
+      enable_network:
+        description: "Allow RSS/network fetching? Manual intake works without it."
+        required: true
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+      strict_qa:
+        description: "Fail workflow if QA fails?"
+        required: true
+        default: "true"
+        type: choice
+        options: ["false", "true"]
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  brief-factory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Brief Factory
+        shell: bash
+        run: |
+          set -euo pipefail
+          NETWORK_FLAG=""
+          if [[ "${{ github.event.inputs.enable_network }}" == "true" ]]; then NETWORK_FLAG="--enable-network"; fi
+          STRICT_FLAG=""
+          if [[ "${{ github.event.inputs.strict_qa }}" == "true" ]]; then STRICT_FLAG="--strict-qa"; fi
+          python scripts/run_brief_factory.py \
+            --run-mode "${{ github.event.inputs.run_mode }}" \
+            --client-config "${{ github.event.inputs.client_config }}" \
+            --source-registry "${{ github.event.inputs.source_registry }}" \
+            --manual-csv "${{ github.event.inputs.manual_csv }}" \
+            $NETWORK_FLAG $STRICT_FLAG
+
+      - name: Upload delivery artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: brief-factory-delivery-${{ github.run_number }}
+          path: |
+            outputs/brief_factory/**
