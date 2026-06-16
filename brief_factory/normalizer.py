@@ -5,6 +5,15 @@ from typing import Any, Dict, List
 from .utils import clean, now_utc, split_list, stable_id, url_ok
 
 
+APPROVED_STATUSES = {"approved", "operator_verified", "verified", "complete", "completed", "client_ready", "ready"}
+
+
+def _as_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return clean(value).lower() in {"1", "true", "yes", "y"}
+
+
 def normalize_item(raw: Dict[str, Any], client_config: Dict[str, Any]) -> Dict[str, Any]:
     title = clean(raw.get("title") or raw.get("headline"))
     summary = clean(raw.get("summary"))
@@ -14,6 +23,8 @@ def normalize_item(raw: Dict[str, Any], client_config: Dict[str, Any]) -> Dict[s
     urgency = clean(raw.get("urgency")).lower() or "medium"
     category = clean(raw.get("category")).lower() or "market_signal"
     status = clean(raw.get("status")).lower() or "ready_for_review"
+    review_status = clean(raw.get("review_status")).lower()
+    explicit_needs_review = _as_bool(raw.get("needs_review"))
     needs_review_reasons: List[str] = []
 
     if not title:
@@ -26,8 +37,12 @@ def normalize_item(raw: Dict[str, Any], client_config: Dict[str, Any]) -> Dict[s
         needs_review_reasons.append("missing source timestamp")
     if confidence == "low":
         needs_review_reasons.append("low confidence")
-    if "review" in status:
+    if explicit_needs_review:
+        needs_review_reasons.append("manual needs_review flag")
+    if "review" in status and status not in APPROVED_STATUSES:
         needs_review_reasons.append("status requires review")
+    if review_status and review_status not in APPROVED_STATUSES:
+        needs_review_reasons.append(f"review_status={review_status}")
 
     item_id = clean(raw.get("item_id")) or stable_id("brief", title, summary, ";".join(source_urls))
     return {
@@ -48,6 +63,8 @@ def normalize_item(raw: Dict[str, Any], client_config: Dict[str, Any]) -> Dict[s
         "source_urls": source_urls,
         "source_timestamp": source_timestamp,
         "tags": split_list(raw.get("tags")),
+        "status": status,
+        "review_status": review_status,
         "notes": clean(raw.get("notes")),
         "needs_review": bool(needs_review_reasons),
         "review_reasons": needs_review_reasons,
