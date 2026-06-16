@@ -1,0 +1,6 @@
+send_order,agency_name,email,subject,send_from,send_date,status,follow_up_1_due,follow_up_1_status,follow_up_2_due,follow_up_2_status,reply_status,next_step,notes
+1,Page Pros,info@pagepros.io,White-label local SEO briefs for Page Pros,michael@brieffactory.com,,not_sent,,not_due,,not_due,no_reply_yet,,"No attachment. Use Page Pros email from outreach batch."
+2,Local SEO Search,info@localseosearch.ca,Quick idea for Local SEO Search client reporting,michael@brieffactory.com,,not_sent,,not_due,,not_due,no_reply_yet,,"No attachment. Use Local SEO Search email from outreach batch."
+3,Reputation.ca,info@reputation.ca,White-label reputation signal briefs,michael@brieffactory.com,,not_sent,,not_due,,not_due,no_reply_yet,,"No attachment. Use Reputation.ca email from outreach batch."
+4,NKPR,info@nkpr.net,White-label client intelligence briefs for PR accounts,michael@brieffactory.com,,not_sent,,not_due,,not_due,no_reply_yet,,"No attachment. Needs custom PR email before sending."
+5,BrandLume,shine@brandlume.com,White-label brief layer for agency reporting,michael@brieffactory.com,,not_sent,,not_due,,not_due,no_reply_yet,,"No attachment. Needs custom digital marketing/white-label email before sending."
